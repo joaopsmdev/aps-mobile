@@ -5,9 +5,13 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import axios from "axios";
 import traduzirDescricao from "./tradutor";
+import sunnyIcon from "./assets/sunny-icon.png";
+import cloudyIcon from "./assets/cloudy-icon.png";
+import rainyIcon from "./assets/rainy-icon.png";
 
 export default function App() {
   const [city, setCity] = useState("");
@@ -37,14 +41,42 @@ export default function App() {
     } catch (error) {
       console.error(error);
       if (error.response.status === 404) {
-        alert("a cidade não existe");
+        alert("A cidade não existe");
       }
     }
   };
 
+  let weatherIcon;
+  if (weatherData) {
+    // Determina qual imagem exibir com base na descrição do tempo
+    const weatherDescription = weatherData.weather[0].description;
+    if (weatherDescription.includes("clear")) {
+      weatherIcon = sunnyIcon;
+    } else if (weatherDescription.includes("cloud")) {
+      weatherIcon = cloudyIcon;
+    } else if (weatherDescription.includes("rain")) {
+      weatherIcon = rainyIcon;
+    }
+    // ...
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Previsão do tempo</Text>
+      <Text style={styles.title}>Previsão do Tempo</Text>
+      {/* ... */}
+      {weatherData && (
+        <View style={styles.weatherInfo}>
+          {/* Exibe o ícone correspondente à previsão do tempo */}
+          {weatherIcon && (
+            <Image
+              source={weatherIcon}
+              style={styles.weatherIcon}
+              resizeMode="contain"
+            />
+          )}
+          {/* ... */}
+        </View>
+      )}
       <TextInput
         style={styles.input}
         value={city}
@@ -61,7 +93,13 @@ export default function App() {
           >{`Cidade: ${weatherData.name}`}</Text>
           <Text
             style={styles.weatherText}
+          >{`País: ${weatherData.sys.country}`}</Text>
+          <Text
+            style={styles.weatherText}
           >{`Temperatura: ${weatherData.main.temp}°C`}</Text>
+          <Text
+            style={styles.weatherText}
+          >{`Sensação Térmica: ${weatherData.main.feels_like}°C`}</Text>
           <Text style={styles.weatherText}>{`Tempo: ${traduzirDescricao(
             weatherData.weather[0].description
           )}`}</Text>
@@ -82,14 +120,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 20,
   },
-  image: {
-    width: 200,
-    height: 200,
-  },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+  },
+  image: {
+    width: 150,
+    height: 150,
+    marginBottom: 20,
+  },
+  weatherIcon: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
   },
   input: {
     borderWidth: 1,
@@ -121,5 +165,10 @@ const styles = StyleSheet.create({
   },
   warningText: {
     fontSize: 20,
+    color: "red",
+    fontWeight: "bold",
+  },
+  weatherIconContainer: {
+    marginBottom: 20,
   },
 });
