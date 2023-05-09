@@ -33,7 +33,7 @@ export default function App() {
         setIsFloodingPossible(true);
       } else if (data.snow && data.snow["1h"] && data.snow["1h"] > 10) {
         setIsFloodingPossible(true);
-      } else if (data.main.humidity > 80) {
+      } else if (data.main.humidity > 90) {
         setIsFloodingPossible(true);
       } else {
         setIsFloodingPossible(false);

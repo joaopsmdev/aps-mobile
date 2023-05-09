@@ -26,6 +26,8 @@ export default function traduzirDescricao(descricao) {
       return "chuva de intensidade leve";
     case "shower rain":
       return "chuva";
+    case "unknown":
+      return "desconhecido";
     case "heavy intensity shower rain":
       return "chuva de intensidade forte";
     case "ragged shower rain":
